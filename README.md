@@ -20,12 +20,13 @@ Modified the mediamtx to support multiple authJWTJWKS.
 ### Generate
     go run scripts/generate_config.go
 
+## Dev
+    go generate ./...
+    go run .
+
 ## Build
     go generate ./...
     CGO_ENABLED=0 go build .
     ./mediamtx
 
-## Dev
-    go generate ./...
-    go run .
 

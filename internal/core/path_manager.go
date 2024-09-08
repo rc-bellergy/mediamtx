@@ -237,7 +237,12 @@ func (pm *pathManager) doFindPathConf(req defs.PathFindPathConfReq) {
 		return
 	}
 
-	err = pm.authManager.Authenticate(req.AccessRequest.ToAuthRequest())
+	// Handle mulple AuthJWTJWKS
+	// Pass the AuthJWTJWKS from the "paths:" configuration to the AuthManager
+	r := req.AccessRequest.ToAuthRequest()
+	r.AuthJWTJWKS = pathConf.AuthJWTJWKS
+
+	err = pm.authManager.Authenticate(r)
 	if err != nil {
 		req.Res <- defs.PathFindPathConfRes{Err: err}
 		return

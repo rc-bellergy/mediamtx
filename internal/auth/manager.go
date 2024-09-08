@@ -57,6 +57,9 @@ type Request struct {
 	Query       string
 	RTSPRequest *base.Request
 	RTSPNonce   string
+
+	// only for JWT Auth
+	AuthJWTJWKS string
 }
 
 // Error is a authentication error.
@@ -282,7 +285,8 @@ func (m *Manager) authenticateHTTP(req *Request) error {
 }
 
 func (m *Manager) authenticateJWT(req *Request) error {
-	keyfunc, err := m.pullJWTJWKS()
+
+	keyfunc, err := m.pullJWTJWKS(req.AuthJWTJWKS)
 	if err != nil {
 		return err
 	}
@@ -310,13 +314,18 @@ func (m *Manager) authenticateJWT(req *Request) error {
 	return nil
 }
 
-func (m *Manager) pullJWTJWKS() (jwt.Keyfunc, error) {
+func (m *Manager) pullJWTJWKS(jwks string) (jwt.Keyfunc, error) {
 	now := time.Now()
 
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
-	if now.Sub(m.jwtLastRefresh) >= jwtRefreshPeriod {
+	if now.Sub(m.jwtLastRefresh) >= jwtRefreshPeriod || m.JWTJWKS != jwks {
+
+		// fmt.Println("JWT Refresh:", jwks)
+
+		m.JWTJWKS = jwks
+
 		if m.jwtHTTPClient == nil {
 			m.jwtHTTPClient = &http.Client{
 				Timeout:   (m.ReadTimeout),

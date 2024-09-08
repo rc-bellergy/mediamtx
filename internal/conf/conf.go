@@ -561,9 +561,9 @@ func (conf *Conf) Validate() error {
 		}
 
 	case AuthMethodJWT:
-		if conf.AuthJWTJWKS == "" {
-			return fmt.Errorf("'authJWTJWKS' is empty")
-		}
+		// if conf.AuthJWTJWKS == "" {
+		// 	return fmt.Errorf("'authJWTJWKS' is empty")
+		// }
 		if conf.AuthJWTClaimKey == "" {
 			return fmt.Errorf("'authJWTClaimKey' is empty")
 		}

@@ -44,7 +44,7 @@ runOnDisconnect:
 # * internal: users are stored in the configuration file
 # * http: an external HTTP URL is contacted to perform authentication
 # * jwt: an external identity server provides authentication through JWTs
-authMethod: internal
+authMethod: jwt
 
 # Internal authentication.
 # list of users.
@@ -120,7 +120,14 @@ authHTTPExclude:
 # Users are expected to pass the JWT in the Authorization header or as a query parameter.
 # This is the JWKS URL that will be used to pull (once) the public key that allows
 # to validate JWTs.
-authJWTJWKS:
+
+# If use multiple JWKS URLs, base on the camera paths
+# The paths:
+#       camera:
+#         authJWTJWKS:
+# can override this setting.
+# authJWTJWKS: https://keycloak.mpiot.com.hk/realms/goldlion-ghc/protocol/openid-connect/certs
+authJWTJWKS: 
 # name of the claim that contains permissions.
 authJWTClaimKey: mediamtx_permissions
 
@@ -702,4 +709,25 @@ paths:
 
   # Settings under path "all_others" are applied to all paths that
   # do not match another entry.
+
+  "~^ghl/ghc/cam_([0-9]+)$":
+    sourceOnDemand: yes
+    source: rtsp://admin:Admin%21234@ioter-goldlion.sytes.net/ISAPI/Streaming/channels/$G1
+    authJWTJWKS: https://keycloak.mpiot.com.hk/realms/goldlion-ghc/protocol/openid-connect/certs
+
+  "~^ghl/ghc/cam_([0-9]+)/start_(.+)/end_(.+)$":
+    sourceOnDemand: yes
+    source: rtsp://admin:Admin%21234@ioter-goldlion.sytes.net/Streaming/tracks/$G1/?starttime=$G2&endtime=$G3
+    authJWTJWKS: https://keycloak.mpiot.com.hk/realms/goldlion-ghc/protocol/openid-connect/certs
+
+  "~^master/cam_([0-9]+)$":
+    sourceOnDemand: yes
+    source: rtsp://admin:Admin%21234@ioter-goldlion.sytes.net/ISAPI/Streaming/channels/$G1
+    authJWTJWKS: https://keycloak.mpiot.com.hk/realms/master/protocol/openid-connect/certs
+
+  "~^master/cam_([0-9]+)/start_(.+)/end_(.+)$":
+    sourceOnDemand: yes
+    source: rtsp://admin:Admin%21234@ioter-goldlion.sytes.net/Streaming/tracks/$G1/?starttime=$G2&endtime=$G3
+    authJWTJWKS: https://keycloak.mpiot.com.hk/realms/master/protocol/openid-connect/certs
+
   all_others:

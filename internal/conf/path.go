@@ -95,6 +95,7 @@ type Path struct {
 	MaxReaders                 int            `json:"maxReaders"`
 	SRTReadPassphrase          string         `json:"srtReadPassphrase"`
 	Fallback                   string         `json:"fallback"`
+	AuthJWTJWKS                string         `json:"authJWTJWKS"`
 
 	// Record
 	Record                bool           `json:"record"`

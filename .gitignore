@@ -4,3 +4,6 @@
 /apidocs/*.html
 /internal/servers/hls/hls.min.js
 /internal/staticsources/rpicamera/mtxrpicam_*
+.env
+mediamtx.yml
+mediamtx
